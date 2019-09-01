@@ -116,7 +116,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.connected_to
         target: aws-network
-      - type: cloudify.relationships.connected_to
+      - type: cloudify.relationships.contained_in
         target: public-infra-vm
 
   aws-lb:
@@ -138,7 +138,7 @@ node_templates:
     relationships:
       - type: cloudify.relationships.connected_to
         target: aws-db
-      - type: cloudify.relationships.connected_to
+      - type: cloudify.relationships.contained_in
         target: public-infra-vm
 
   wordpress-app:
@@ -157,7 +157,7 @@ node_templates:
             load_balancer_deployment: aws-lb
             kubernetes_deployment: kubernetes
     relationships:
-      - type: cloudify.relationships.connected_to
+      - type: cloudify.relationships.contained_in
         target: kubernetes
       - type: cloudify.relationships.connected_to
         target: aws-lb
@@ -180,7 +180,7 @@ node_templates:
             image_id: { get_input: [ centos-image-id ] }
             flavor_id: { get_input: [ centos-flavor-id ] }
     relationships:
-      - type: cloudify.relationships.connected_to
+      - type: cloudify.relationships.contained_in
         target: private-infra-vm
       - type: cloudify.relationships.connected_to
         target: openstack-network
