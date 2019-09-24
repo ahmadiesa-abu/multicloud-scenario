@@ -1,0 +1,6 @@
+client_config:  
+  user_domain_name: { get_input: username }
+  password: { get_input: password }
+  auth_url: { get_input: auth_url }
+  region_name: { get_input: region }
+  project_domain_name: { get_input: project_name }

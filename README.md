@@ -22,6 +22,8 @@ cfy secrets create keystone_url -s https://xxxxxx:5000/v3
 cfy secrets create keystone_username -s xxxxxxx
 cfy secrets create centos_image_id -s xxxxxxxxxxx
 cfy secrets create centos_flavor_id -s xxxxx
+cfy secrets create base_image_id -s xxxxx
+cfy secrets create base_flavor_id -s xxxxx
 
 =====================================================================AWS
 #create aws secrets-

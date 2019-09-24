@@ -38,7 +38,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: openstack-network-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/openstack-example-network.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/openstack-example-network.zip
           main_file_name: blueprint.yaml
         deployment:
           id: openstack-network
@@ -54,7 +54,7 @@ node_templates:
           implementation: scripts/upload-cloud-infra.sh
           inputs:
             id: private-cloud-vm
-            blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/db-lb-app-infrastructure.zip
+            blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/db-lb-app-infrastructure.zip
             main_file_name: openstack.yaml
           executor: central_deployment_agent
           max_retries: 0
@@ -72,8 +72,8 @@ node_templates:
         blueprint:
           external_resource: false
           id: openstack-db-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/db-lb-app-db.zip
-          main_file_name: public-cloud-application.yaml
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/db-lb-app-db.zip
+          main_file_name: private-cloud-application.yaml
         deployment:
           id: openstack-db
           auto_inc_suffix: false
@@ -83,8 +83,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.connected_to
         target: openstack-network
-      - type: cloudify.relationships.connected_to
-        target: public-infra-vm
+      - type: cloudify.relationships.contained_in
+        target: private-infra-vm
 
   openstack-lb:
     type: cloudify.nodes.ServiceComponent
@@ -93,8 +93,8 @@ node_templates:
         blueprint:
           external_resource: false
           id: openstack-lb-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/db-lb-app-lb.zip
-          main_file_name: public-cloud-application.yaml
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/db-lb-app-lb.zip
+          main_file_name: private-cloud-application.yaml
         deployment:
           id: openstack-lb
           auto_inc_suffix: false
@@ -105,8 +105,8 @@ node_templates:
     relationships:
       - type: cloudify.relationships.connected_to
         target: openstack-db
-      - type: cloudify.relationships.connected_to
-        target: public-infra-vm
+      - type: cloudify.relationships.contained_in
+        target: private-infra-vm
 
   wordpress-app:
     type: cloudify.nodes.ServiceComponent
@@ -115,16 +115,20 @@ node_templates:
         blueprint:
           external_resource: false
           id: wordpress-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/db-lb-app-kube_app.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/db-lb-app-kube_app.zip
           main_file_name: application.yaml
         deployment:
           id: wordpress
-          auto_inc_suffix: false
+          auto_inc_suffix: true
           inputs:
             load_balancer_deployment: openstack-lb
             kubernetes_deployment: kubernetes
+    capabilities:
+      scalable:
+        properties:
+          default_instances: 1
     relationships:
-      - type: cloudify.relationships.connected_to
+      - type: cloudify.relationships.contained_in
         target: kubernetes
       - type: cloudify.relationships.connected_to
         target: openstack-lb
@@ -136,7 +140,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: kubernetes-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-18/kubernetes.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/kubernetes.zip
           main_file_name: openstack.yaml
         deployment:
           id: kubernetes
