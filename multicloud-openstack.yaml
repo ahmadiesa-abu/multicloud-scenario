@@ -8,26 +8,47 @@ imports:
   - plugin:cloudify-kubernetes-plugin
 
 inputs:
+
   openstack-external-network:
     type: string
     description: >
       the openstack network name or Id to connect for external management
     default:  { get_secret: openstack-external-network }
+
   centos-image-id:
     type: string
     description: >
      centos image ID on private cloud
     default:  { get_secret: centos_image_id }
+
   centos-flavor-id:
     type: string
     description: >
      centos flavor ID on private cloud
     default:  { get_secret: centos_flavor_id }
+
   keystone-region:
     type: string
     description: >
      openstack region
     default:  { get_secret: keystone_region}
+
+  app_instances:
+    type: string
+    description: >
+     number of application instances (dockers)
+    default:  1
+
+  opnstack_client_config:
+    type: dict
+    description: A dictionary containing the client configuration for Openstack. Default is for keystone v2. Provide an alternate input for keystone v3.
+    default:
+      username: { get_secret: openstack_username }
+      password: { get_secret: openstack_password }
+      project_name: { get_secret: openstack_tenant_name }
+      auth_url: { get_secret: openstack_auth_url }
+      region_name: { get_secret: openstack_region }
+
 
 node_templates:
 
@@ -45,6 +66,7 @@ node_templates:
           auto_inc_suffix: false
           inputs:
             external_network_id: { get_input: [ openstack-external-network ] }
+            client_config_dict: { get_input: opnstack_client_config }
 
   private-infra-vm:
     type: cloudify.nodes.Root
@@ -150,6 +172,7 @@ node_templates:
             region_name: RegionOne
             image_id: { get_input: [ centos-image-id ] }
             flavor_id: { get_input: [ centos-flavor-id ] }
+            client_config_dict: { get_input: opnstack_client_config }
     relationships:
       - type: cloudify.relationships.connected_to
         target: private-infra-vm

@@ -39,6 +39,16 @@ inputs:
      number of application instances (dockers)
     default:  1
 
+  opnstack_client_config:
+    type: dict
+    description: A dictionary containing the client configuration for Openstack. Default is for keystone v2. Provide an alternate input for keystone v3.
+    default:
+      username: { get_secret: openstack_username }
+      password: { get_secret: openstack_password }
+      project_name: { get_secret: openstack_tenant_name }
+      auth_url: { get_secret: openstack_auth_url }
+      region_name: { get_secret: openstack_region }
+
 node_templates:
 
   aws-network:
@@ -68,6 +78,7 @@ node_templates:
           auto_inc_suffix: false
           inputs:
             external_network_id: { get_input: [ openstack-external-network ] }
+            client_config_dict: { get_input: opnstack_client_config }
 
   public-infra-vm:
     type: cloudify.nodes.Root
@@ -192,6 +203,7 @@ node_templates:
             region_name: RegionOne
             image_id: { get_input: [ centos-image-id ] }
             flavor_id: { get_input: [ centos-flavor-id ] }
+            client_config_dict: { get_input: opnstack_client_config }
     relationships:
       - type: cloudify.relationships.contained_in
         target: private-infra-vm
