@@ -1,4 +1,4 @@
-client_config:
+opnstack_client_config:
   user_domain_name: { get_secret: username }
   password: { get_secret: password }
   auth_url: { get_secret: auth_url }
