@@ -15,6 +15,12 @@ inputs:
       the openstack network name or Id to connect for external management
     default:  { get_secret: openstack-external-network }
 
+  openstack-external-network-id:
+    type: string
+    description: >
+      the openstack network name or Id to connect for external management
+    default:  { get_secret: openstack-external-network }
+
   centos-image-id:
     type: string
     description: >
