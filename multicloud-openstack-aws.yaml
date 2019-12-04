@@ -42,7 +42,9 @@ inputs:
   app_instances:
     type: string
     description: >
-     number of application instances (dockers)
+     number of application instances (dockers) to run
+    constraints:
+      - less_or_equal: 20
     default:  1
 
   opnstack_client_config:
@@ -64,7 +66,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: aws-network-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/aws-example-network.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/aws-example-network.zip
           main_file_name: blueprint.yaml
         deployment:
           id: aws-network
@@ -77,7 +79,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: openstack-network-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/openstack-example-network.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/openstack-example-network.zip
           main_file_name: blueprint.yaml
         deployment:
           id: openstack-network
@@ -94,7 +96,7 @@ node_templates:
           implementation: scripts/upload-cloud-infra.sh
           inputs:
               id: public-cloud-vm
-              blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/db-lb-app-infrastructure.zip
+              blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/db-lb-app-infrastructure.zip
               main_file_name: aws.yaml
           executor: central_deployment_agent
           max_retries: 0
@@ -113,7 +115,7 @@ node_templates:
           implementation: scripts/upload-cloud-infra.sh
           inputs:
             id: private-cloud-vm
-            blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/db-lb-app-infrastructure.zip
+            blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/db-lb-app-infrastructure.zip
             main_file_name: openstack.yaml
           executor: central_deployment_agent
           max_retries: 0
@@ -131,7 +133,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: aws-db-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/db-lb-app-db.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/db-lb-app-db.zip
           main_file_name: public-cloud-application.yaml
         deployment:
           id: aws-db
@@ -152,7 +154,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: aws-lb-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/db-lb-app-lb.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/db-lb-app-lb.zip
           main_file_name: public-cloud-application.yaml
         deployment:
           id: aws-lb
@@ -174,7 +176,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: wordpress-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-2/db-lb-app-kube_app.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/db-lb-app-kube_app.zip
           main_file_name: application.yaml
         deployment:
           id: wordpress
@@ -182,6 +184,7 @@ node_templates:
           inputs:
             load_balancer_deployment: aws-lb
             kubernetes_deployment: kubernetes
+#            current_suffix_index: { get_attribute: [ SELF, resource_config, deployment, current_suffix_index ] }
     capabilities:
       scalable:
         properties:
@@ -199,7 +202,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: kubernetes-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/4.5.5-20/kubernetes.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-4/kubernetes.zip
           main_file_name: openstack.yaml
         deployment:
           id: kubernetes
