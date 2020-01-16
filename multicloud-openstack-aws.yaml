@@ -202,7 +202,7 @@ node_templates:
         blueprint:
           external_resource: false
           id: kubernetes-bp
-          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-6/kubernetes.zip
+          blueprint_archive: https://github.com/cloudify-community/blueprint-examples/releases/download/5.0.0-6/kubernetes.tar.gz
           main_file_name: openstack.yaml
         deployment:
           id: kubernetes
